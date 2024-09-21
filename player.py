@@ -13,6 +13,9 @@ class Player(CircleShape):
         self.image = pygame.Surface((radius * 4, radius * 4), pygame.SRCALPHA)
         self.rect = self.image.get_rect(center=(x, y))
 
+    def move(self, dt):
+        pass
+
     def rotate(self, dt):
         self.rotation += self.player_turn_speed * dt
 
@@ -21,10 +24,10 @@ class Player(CircleShape):
 
         forward = pygame.Vector2(0, -1).rotate(-self.rotation)
 
-        if keys[pygame.K_w]:
-            self.position += forward * self.player_speed * dt
         if keys[pygame.K_s]:
             self.position -= forward * self.player_speed * dt
+        if keys[pygame.K_w]:
+            self.position += forward * self.player_speed * dt
 
         if keys[pygame.K_a]:
             self.rotate(dt)

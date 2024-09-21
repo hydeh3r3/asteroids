@@ -1,5 +1,6 @@
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from player import Player  # Add this import
 
 # Define BLACK if it's not in constants.py
 BLACK = (0, 0, 0)
@@ -14,6 +15,8 @@ def main():
     clock = pygame.time.Clock()
     dt = 0
     
+    player = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)  # Move this line outside the loop
+    
     running = True
     while running:
         for event in pygame.event.get():
@@ -21,15 +24,12 @@ def main():
                 running = False
         
         screen.fill(BLACK)
-        # Game logic and drawing would go here
         
-        pygame.display.flip()
-        clock.tick(60)  # Limit to 60 FPS
-        dt = clock.tick() / 1000
-
-        player = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         player.update(dt)
         player.draw(screen)
+        
+        pygame.display.flip()
+        dt = clock.tick(60) / 1000  # Combine these two lines
     
     pygame.quit()
 

@@ -26,7 +26,7 @@ def main():
     asteroid_field = AsteroidField()
     updateable.add(asteroid_field)
     
-    running = True
+    running = True  # Initialize the running variable here
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -39,8 +39,11 @@ def main():
         updateable.update(dt)
         drawable.draw(screen)
         
-        if check_collision(player, asteroids):
-            print("Collision detected!")  # For now, just print a message
+        for asteroid in asteroids:
+            if player.collides_with(asteroid):
+                print("Game over!")
+                running = False
+                break
         
         pygame.display.flip()
     

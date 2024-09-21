@@ -5,12 +5,6 @@ from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
 
-def check_collision(player, asteroids):
-    for asteroid in asteroids:
-        if pygame.sprite.collide_circle(player, asteroid):
-            return True
-    return False
-
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -58,7 +52,8 @@ def main():
             for asteroid in asteroids:
                 if shot.collides_with(asteroid):
                     shot.kill()
-                    asteroid.kill()
+                    new_asteroids = asteroid.split()
+                    asteroids.add(new_asteroids)
                     break
         
         pygame.display.flip()

@@ -1,6 +1,7 @@
 import pygame
 from circleshape import CircleShape
-from constants import PLAYER_RADIUS, WHITE, PLAYER_TURN_SPEED, PLAYER_SPEED
+from constants import PLAYER_RADIUS, WHITE, PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOOT_SPEED, PLAYER_SHOOT_COOLDOWN
+from shot import Shot
 
 class Player(CircleShape):
     def __init__(self, x, y, radius=PLAYER_RADIUS):
@@ -9,6 +10,7 @@ class Player(CircleShape):
         self.rotation = 0
         self.player_turn_speed = PLAYER_TURN_SPEED
         self.player_speed = PLAYER_SPEED
+        self.shoot_timer = 0  # New timer variable
         # Create a larger surface to accommodate rotation
         self.image = pygame.Surface((radius * 4, radius * 4), pygame.SRCALPHA)
         self.rect = self.image.get_rect(center=(x, y))
@@ -34,9 +36,18 @@ class Player(CircleShape):
         if keys[pygame.K_d]:
             self.rotate(-dt)
 
+        # Update shoot timer
+        self.shoot_timer = max(0, self.shoot_timer - dt)
+
+        if keys[pygame.K_SPACE] and self.shoot_timer == 0:
+            self.shoot_timer = PLAYER_SHOOT_COOLDOWN
+            return self.shoot()
+
         super().update(dt)
         self.image.fill((0, 0, 0, 0))
         pygame.draw.polygon(self.image, WHITE, self.triangle(), 2)
+
+        return None
 
     def triangle(self):
         # Adjust the triangle to be centered on the larger surface
@@ -47,3 +58,9 @@ class Player(CircleShape):
         b = center - forward * self.radius - right
         c = center - forward * self.radius + right
         return [a, b, c]
+
+    def shoot(self):
+        forward = pygame.Vector2(0, -1).rotate(-self.rotation)
+        shot = Shot(self.position.x, self.position.y)  # 'self' was misspelled as 'se¥lf'
+        shot.velocity = forward * PLAYER_SHOOT_SPEED
+        return shot
